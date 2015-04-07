@@ -1,0 +1,39 @@
+Source: clfft
+Priority: extra
+Maintainer: Jerome Kieffer <jerome.kieffer@esrf.fr>
+Build-Depends: debhelper (>= 9), cmake
+Standards-Version: 3.9.4
+Section: libs
+Homepage: https://github.com/clMathLibraries/clFFT
+#Vcs-Git: git://git.debian.org/collab-maint/clfft.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/clfft.git;a=summary
+
+Package: clfft-dev
+Section: libdevel
+Architecture: any
+Depends: clfft2 (= ${binary:Version})
+Description: clFFT is an open source OpenCL library implementation of FFT
+ The FFT is an implementation of the Discrete Fourier Transform (DFT) that
+ makes use of symmetries in the FFT definition to reduce the mathematical
+ intensity required from O(N2) to O(N log2( N )) when the sequence length
+ N is the product of small prime factors. Currently, there is no standard
+ API for FFT routines. Hardware vendors usually provide a set of
+ high-performance FFTs optimized for their systems: no two vendors employ
+ the same interfaces for their FFT routines. clFFT provides a set of FFT
+ routines that are optimized for AMD graphics processors, but also are
+ functional across CPU and other compute devices.
+
+Package: clfft2
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: clFFT is an open source OpenCL library implementation of FFT
+ The FFT is an implementation of the Discrete Fourier Transform (DFT) that
+ makes use of symmetries in the FFT definition to reduce the mathematical
+ intensity required from O(N2) to O(N log2( N )) when the sequence length
+ N is the product of small prime factors. Currently, there is no standard
+ API for FFT routines. Hardware vendors usually provide a set of
+ high-performance FFTs optimized for their systems: no two vendors employ
+ the same interfaces for their FFT routines. clFFT provides a set of FFT
+ routines that are optimized for AMD graphics processors, but also are
+ functional across CPU and other compute devices.
