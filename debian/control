@@ -5,13 +5,13 @@ Build-Depends: debhelper (>= 9), cmake, opencl-icd, ocl-icd-dev
 Standards-Version: 3.9.4
 Section: libs
 Homepage: https://github.com/clMathLibraries/clFFT
-#Vcs-Git: git://git.debian.org/collab-maint/clfft.git
-#Vcs-Browser: http://git.debian.org/?p=collab-maint/clfft.git;a=summary
+Multi-Arch: same
 
 Package: clfft-dev
 Section: libdevel
 Architecture: any
 Depends: clfft2 (= ${binary:Version}), ocl-icd-dev
+Pre-Depends: ${misc:Pre-Depends}
 Description: clFFT is an open source OpenCL library implementation of FFT
  The FFT is an implementation of the Discrete Fourier Transform (DFT) that
  makes use of symmetries in the FFT definition to reduce the mathematical
@@ -27,6 +27,7 @@ Package: clfft2
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, opencl-icd
+Pre-Depends: ${misc:Pre-Depends}
 Description: clFFT is an open source OpenCL library implementation of FFT
  The FFT is an implementation of the Discrete Fourier Transform (DFT) that
  makes use of symmetries in the FFT definition to reduce the mathematical
