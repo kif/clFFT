@@ -1,0 +1,514 @@
+--- a/src/scripts/perf/errorHandler.py
++++ b/src/scripts/perf/errorHandler.py
+@@ -1,12 +1,13 @@
++#!/usr/bin/python
+ # ########################################################################
+ # Copyright 2013 Advanced Micro Devices, Inc.
+-# 
++#
+ # Licensed under the Apache License, Version 2.0 (the "License");
+ # you may not use this file except in compliance with the License.
+ # You may obtain a copy of the License at
+-# 
++#
+ # http://www.apache.org/licenses/LICENSE-2.0
+-# 
++#
+ # Unless required by applicable law or agreed to in writing, software
+ # distributed under the License is distributed on an "AS IS" BASIS,
+ # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+@@ -28,8 +29,8 @@
+ DIM_FILE_VAL_INCO = 501 #Value coming from dimension file is incorrect
+ 
+ #__errorTable : Defines all the errors in the system. Add a new error code and
+-#               error message here 
+-"""Error table is defined as private to this module""" 
++#               error message here
++"""Error table is defined as private to this module"""
+ errorTable = {
+               UINS_CAT: 'Application is not able to find the installed catalyst',
+               WIN_REG_SEARCH_FAIL: 'Windows Registry search for catalysts version is unsuccessful',
+@@ -41,21 +42,21 @@
+               }
+ 
+ #--------------------------------Class Definitions-----------------------------
+-class TimeoutException(Exception): 
++class TimeoutException(Exception):
+     pass
+ 
+ """Base class for handling all the application generated exception"""
+ class ApplicationException(Exception):
+-    
++
+     def __init__(self, fileName, errno, msg = ""):
+         self.fileName = fileName
+         self.errno = errno
+         self.mess = errorTable[errno] + msg
+         self.message = 'Application ERROR:'+repr(self.fileName+'-'+str(self.errno)+'-'+self.mess)
+-        
++
+     def __str__(self):
+         return repr(self.fileName+'-'+str(self.errno)+'-'+self.mess)
+-    
++
+ 
+ #--------------------------------Global Function-------------------------------
+ if __name__ == '__main__':
+--- a/src/scripts/perf/fftPerformanceTesting.py
++++ b/src/scripts/perf/fftPerformanceTesting.py
+@@ -1,12 +1,13 @@
++#!/usr/bin/python
+ # ########################################################################
+ # Copyright 2013 Advanced Micro Devices, Inc.
+-# 
++#
+ # Licensed under the Apache License, Version 2.0 (the "License");
+ # you may not use this file except in compliance with the License.
+ # You may obtain a copy of the License at
+-# 
++#
+ # http://www.apache.org/licenses/LICENSE-2.0
+-# 
++#
+ # Unless required by applicable law or agreed to in writing, software
+ # distributed under the License is distributed on an "AS IS" BASIS,
+ # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+@@ -28,7 +29,7 @@
+ class TestCombination:
+     def __init__(self,
+                  lengthx, lengthy, lengthz, batchsize,
+-                 device, inlayout, outlayout, placeness, precision,                 
++                 device, inlayout, outlayout, placeness, precision,
+                  label):
+         self.x = lengthx
+         self.y = lengthy
+@@ -107,7 +108,7 @@
+ 
+ def max_mem_available_in_bytes(exe, device):
+     arguments = [exe, '-i', device]
+-    
++
+     deviceInfo = subprocess.check_output(arguments, stderr=subprocess.STDOUT).split(os.linesep)
+     deviceInfo = itertools.ifilter( lambda x: x.count('MAX_MEM_ALLOC_SIZE'), deviceInfo)
+     deviceInfo = list(itertools.islice(deviceInfo, None))
+@@ -149,7 +150,7 @@
+                 args.createIniFilename.write('--' + x + os.linesep)
+                 args.createIniFilename.write(str(getattr(args,x)) + os.linesep)
+         quit()
+-    
++
+ def load_ini_file_if_requested(args, parser):
+     if args.useIniFilename:
+         argument_list = args.useIniFilename.readlines()
+@@ -311,5 +312,5 @@
+             filename = filename + datetime.now().isoformat().replace(':','.')
+             message = 'A file with the name ' + oldname + ' already exists. Changing filename to ' + filename
+             print message
+-    
++
+     return open(filename, 'w')
+--- a/src/scripts/perf/measurePerformance.py
++++ b/src/scripts/perf/measurePerformance.py
+@@ -1,12 +1,13 @@
++#!/usr/bin/python
+ # ########################################################################
+ # Copyright 2013 Advanced Micro Devices, Inc.
+-# 
++#
+ # Licensed under the Apache License, Version 2.0 (the "License");
+ # you may not use this file except in compliance with the License.
+ # You may obtain a copy of the License at
+-# 
++#
+ # http://www.apache.org/licenses/LICENSE-2.0
+-# 
++#
+ # Unless required by applicable law or agreed to in writing, software
+ # distributed under the License is distributed on an "AS IS" BASIS,
+ # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+@@ -32,7 +33,7 @@
+ 
+ IAM = 'FFT'
+ TIMOUT_VAL = 900  #In seconds
+-   
++
+ devicevalues = ['gpu', 'cpu']
+ layoutvalues = ['cp', 'ci']
+ placevalues = ['in', 'out']
+@@ -118,7 +119,7 @@
+     #return ret
+     currCommandProcess = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+     printLog("Curr Command Process id = "+str(currCommandProcess.pid))
+-    ret = currCommandProcess.communicate()    
++    ret = currCommandProcess.communicate()
+     if(ret[0] == None or ret[0] == ''):
+         errCode = currCommandProcess.poll()
+         raise subprocess.CalledProcessError(errCode, args, output=ret[1])
+@@ -148,7 +149,7 @@
+     currCommandProcess = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+     thread = Thread(target=executeCommand)
+     thread.start()
+-    thread.join(TIMOUT_VAL) #wait for the thread to complete 
++    thread.join(TIMOUT_VAL) #wait for the thread to complete
+     if thread.is_alive():
+         printLog('ERROR: Killing the process - terminating thread because it is taking too much of time to execute')
+         currCommandProcess.kill()
+@@ -174,7 +175,7 @@
+     if not os.path.isfile(args.iniFilename):
+         printLog("No file with the name \'{}\' exists. Please indicate another filename.".format(args.iniFilename))
+         quit()
+-    
++
+     ini = open(args.iniFilename, 'r')
+     iniContents = ini.read()
+     iniContents = iniContents.split(';')
+@@ -184,7 +185,7 @@
+         parameter = line[0]
+         value = line[2]
+         value = value.replace('\'','').replace('[','').replace(']','').replace(' ','')
+-        
++
+         if parameter == 'batchSize':
+             args.batchSize = value
+         elif parameter == 'constProbSize':
+@@ -384,7 +385,7 @@
+                 print 'ERROR: --{0} must specify number with only 1,2,3,5 as factors'.format(option)
+                 quit()
+             #print 'Valid number for :',option,':', m
+-       
++
+ 
+ if args.library == 'clFFT':
+     check_for_1235_factors(args.lengthx, 'lengthx')
+@@ -405,7 +406,7 @@
+     minIndex = numbers.index(minimum)
+     maxIndex = numbers.index(maximum)
+     return numbers[minIndex:maxIndex+1]
+-   
++
+ #expand ranges
+ class Range:
+     def __init__(self, ranges, defaultStep='+1'):
+@@ -504,24 +505,24 @@
+         y = []
+         z = []
+         batch = []
+-    
++
+         x.append(int(n[0][0]))
+-    
++
+         if len(n[0]) >= 2:
+             y.append(int(n[0][1]))
+         else:
+             y.append(1)
+-    
++
+         if len(n[0]) >= 3:
+             z.append(int(n[0][2]))
+         else:
+             z.append(1)
+-    
++
+         if len(n) > 1:
+             batch.append(int(n[1]))
+         else:
+             batch.append(1)
+-    
++
+         combos = itertools.product(x, y, z, batch)
+         combos = list(itertools.islice(combos, None))
+         for n in combos:
+@@ -571,12 +572,12 @@
+ for params in test_combinations:
+     vi = vi+1
+     printLog("")
+-    printLog('preparing command: '+ str(vi))    
++    printLog('preparing command: '+ str(vi))
+     device = params.device
+     lengthx = str(params.x)
+     lengthy = str(params.y)
+     lengthz = str(params.z)
+-    
++
+     if params.batchsize == 'max':
+         batchSize = maxBatchSize(lengthx, lengthy, lengthz, params.inlayout, params.precision, executable(args.library), '--' + device)
+     elif params.batchsize == 'adapt':
+@@ -626,7 +627,7 @@
+                      placeness,
+                      precision,
+                      '-p', '10']
+-   
++
+     writeline = True
+     try:
+         printLog('Executing Command: '+str(arguments))
+--- a/src/scripts/perf/performanceUtility.py
++++ b/src/scripts/perf/performanceUtility.py
+@@ -1,12 +1,13 @@
++#!/usr/bin/python
+ # ########################################################################
+ # Copyright 2013 Advanced Micro Devices, Inc.
+-# 
++#
+ # Licensed under the Apache License, Version 2.0 (the "License");
+ # you may not use this file except in compliance with the License.
+ # You may obtain a copy of the License at
+-# 
++#
+ # http://www.apache.org/licenses/LICENSE-2.0
+-# 
++#
+ # Unless required by applicable law or agreed to in writing, software
+ # distributed under the License is distributed on an "AS IS" BASIS,
+ # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+@@ -28,7 +29,7 @@
+     except:
+         print 'Unhandled Exception at performanceUtility::currentUser()'
+         raise
+-    
++
+ #Details: Generate sorted numbers in radices of 2,3 and 5 upto a given upper limit number
+ def generate235Radices(maxSize):
+     sizeList = list()
+@@ -66,11 +67,11 @@
+         def f2(args):
+             def timeout_handler(signum, frame):
+                 raise errorHandler.TimeoutException()
+- 
+-            old_handler = signal.signal(signal.SIGALRM, timeout_handler) 
++
++            old_handler = signal.signal(signal.SIGALRM, timeout_handler)
+             signal.alarm(timeout_time) # triger alarm in timeout_time seconds
+             retval = ""
+-            try: 
++            try:
+                 retval = f(args)
+             except errorHandler.TimeoutException:
+                 raise errorHandler.ApplicationException(__file__, errorHandler.TIME_OUT)
+@@ -79,7 +80,7 @@
+                 raise
+             finally:
+                 #print 'executing finally'
+-                signal.signal(signal.SIGALRM, old_handler) 
++                signal.signal(signal.SIGALRM, old_handler)
+             signal.alarm(0)
+             return retval
+         return f2
+@@ -90,8 +91,8 @@
+     todayFile =  fileName+'-'+datetime.now().strftime('%Y-%b-%d')+'.txt'
+     with open(todayFile, mode) as f:
+         f.write('------\n'+txt+'\n')
+-        
++
+ def log(filename, txt):
+     with open(filename, 'a') as f:
+         f.write(datetime.now().ctime()+'# '+txt+'\n')
+-        
+\ No newline at end of file
++
+--- a/src/scripts/perf/plotPerformance.py
++++ b/src/scripts/perf/plotPerformance.py
+@@ -1,12 +1,13 @@
++#!/usr/bin/python
+ # ########################################################################
+ # Copyright 2013 Advanced Micro Devices, Inc.
+-# 
++#
+ # Licensed under the Apache License, Version 2.0 (the "License");
+ # you may not use this file except in compliance with the License.
+ # You may obtain a copy of the License at
+-# 
++#
+ # http://www.apache.org/licenses/LICENSE-2.0
+-# 
++#
+ # Unless required by applicable law or agreed to in writing, software
+ # distributed under the License is distributed on an "AS IS" BASIS,
+ # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+@@ -45,16 +46,16 @@
+   #plottype = 'plot'
+   for thisPlot in dataForAllPlots:
+     getattr(pylab, plottype)(thisPlot.xdata, thisPlot.ydata,
+-                             '{}.-'.format(colors.pop()), 
++                             '{}.-'.format(colors.pop()),
+                              label=thisPlot.label, **plotkwargs)
+   if len(dataForAllPlots) > 1:
+     pylab.legend(loc='best')
+-  
++
+   pylab.title(title)
+   pylab.xlabel(xaxislabel)
+   pylab.ylabel(yaxislabel)
+   pylab.grid(True)
+-  
++
+   if args.outputFilename == None:
+     # if no pdf output is requested, spit the graph to the screen . . .
+     pylab.show()
+@@ -75,21 +76,21 @@
+     if not os.path.isfile(thisFile):
+       print 'No file with the name \'{}\' exists. Please indicate another filename.'.format(thisFile)
+       quit()
+-  
++
+     results = open(thisFile, 'r')
+     resultsContents = results.read()
+     resultsContents = resultsContents.rstrip().split('\n')
+-  
++
+     firstRow = resultsContents.pop(0)
+     if firstRow != tableHeader:
+       print 'ERROR: input file \'{}\' does not match expected format.'.format(thisFile)
+       quit()
+-  
++
+     for row in resultsContents:
+       row = row.split(',')
+       row = TableRow(TestCombination(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9]), row[10])
+       data.append(GraphPoint(row.parameters.x, row.parameters.y, row.parameters.z, row.parameters.batchsize, row.parameters.precision, row.parameters.device, row.parameters.label, row.gflops))
+-  
++
+   """
+   data sanity check
+   """
+@@ -98,12 +99,12 @@
+   for option in plotvalues:
+     values = []
+     for point in data:
+-      values.append(getattr(point, option)) 
++      values.append(getattr(point, option))
+     multiplePlotValues.append(len(set(values)) > 1)
+   if multiplePlotValues.count(True) > 1 and args.plot == None:
+     print 'ERROR: more than one parameter of {} has multiple values. Please specify which parameter to plot with --plot'.format(plotvalues)
+     quit()
+-  
++
+   # if args.graphxaxis is not 'problemsize', the user should know that the results might be strange
+   if args.graphxaxis != 'problemsize':
+     xaxisvalueSet = []
+@@ -111,11 +112,11 @@
+       if option != 'problemsize':
+         values = []
+         for point in data:
+-          values.append(getattr(point, option)) 
++          values.append(getattr(point, option))
+         xaxisvalueSet.append(len(set(values)) > 1)
+     if xaxisvalueSet.count(True) > 1:
+       print 'WARNING: more than one parameter of {} is varied. unexpected results may occur. please double check your graphs for accuracy.'.format(xaxisvalues)
+-  
++
+   # multiple rows should not have the same input values
+   pointInputs = []
+   for point in data:
+@@ -123,7 +124,7 @@
+   if len(set(pointInputs)) != len(data):
+     print 'ERROR: imported table has duplicate rows with identical input parameters'
+     quit()
+-  
++
+   """
+   figure out if we have multiple plots on this graph (and what they should be)
+   """
+@@ -134,12 +135,12 @@
+   else:
+     # default to device if none of the options to plot have multiple values
+     multiplePlots = 'device'
+-  
++
+   """
+   assemble data for the graphs
+   """
+   data.sort(key=lambda row: int(getattr(row, args.graphxaxis)))
+-  
++
+   # choose scale for x axis
+   if args.xaxisscale == None:
+     # user didn't specify. autodetect
+@@ -149,7 +150,7 @@
+       args.xaxisscale = 'log10'
+     else: # small numbers on x-axis
+       args.xaxisscale = 'linear'
+-  
++
+   if args.xaxisscale == 'linear':
+     plotkwargs = {}
+     plottype = 'plot'
+@@ -162,15 +163,15 @@
+   else:
+     print 'ERROR: invalid value for x-axis scale'
+     quit()
+-  
++
+   plots = set(getattr(row, multiplePlots) for row in data)
+-  
++
+   class DataForOnePlot:
+     def __init__(self, inlabel, inxdata, inydata):
+       self.label = inlabel
+       self.xdata = inxdata
+       self.ydata = inydata
+-  
++
+   dataForAllPlots = []
+   for plot in plots:
+     dataForThisPlot = itertools.ifilter( lambda x: getattr(x, multiplePlots) == plot, data)
+@@ -181,7 +182,7 @@
+       xdata = [getattr(row, args.graphxaxis) for row in dataForThisPlot]
+     ydata = [getattr(row, args.graphyaxis) for row in dataForThisPlot]
+     dataForAllPlots.append(DataForOnePlot(plot,xdata,ydata))
+-  
++
+   """
+   assemble labels for the graph or use the user-specified ones
+   """
+@@ -191,7 +192,7 @@
+   else:
+     # autogen a lovely title
+     title = 'Performance vs. ' + args.graphxaxis.capitalize()
+-  
++
+   if args.xaxislabel:
+     # use the user selection
+     xaxislabel = args.xaxislabel
+@@ -201,9 +202,9 @@
+       units = '(bytes)'
+     else:
+       units = '(datapoints)'
+-  
++
+     xaxislabel = args.graphxaxis + ' ' + units
+-  
++
+   if args.yaxislabel:
+     # use the user selection
+     yaxislabel = args.yaxislabel
+@@ -212,23 +213,23 @@
+     if args.graphyaxis == 'gflops':
+       units = 'GFLOPS'
+     yaxislabel = 'Performance (' + units + ')'
+-  
++
+   """
+   display a pretty graph
+   """
+   colors = ['k','y','m','c','r','b','g']
+-  
++
+   for thisPlot in dataForAllPlots:
+     getattr(pylab, plottype)(thisPlot.xdata, thisPlot.ydata, '{}.-'.format(colors.pop()), label=thisPlot.label, **plotkwargs)
+-  
++
+   if len(dataForAllPlots) > 1:
+     pylab.legend(loc='best')
+-  
++
+   pylab.title(title)
+   pylab.xlabel(xaxislabel)
+   pylab.ylabel(yaxislabel)
+   pylab.grid(True)
+-  
++
+   if args.outputFilename == None:
+     # if no pdf output is requested, spit the graph to the screen . . .
+     pylab.show()
