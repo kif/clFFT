@@ -13,6 +13,6 @@ DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
 
 %:
-	dh $@ --buildsystem cmake --parallel --sourcedirectory=src
+	dh $@ --buildsystem cmake --parallel --sourcedirectory=src --dbg-package=libclfft2-dbg
 
 

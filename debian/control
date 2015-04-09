@@ -56,3 +56,20 @@ Description: clFFT is an open source OpenCL library implementation of FFT
  the same interfaces for their FFT routines. clFFT provides a set of FFT
  routines that are optimized for AMD graphics processors, but also are
  functional across CPU and other compute devices.
+
+Package: libclfft2-dbg
+Section: libs
+Multi-Arch: same
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, opencl-icd
+Pre-Depends: ${misc:Pre-Depends}
+Description: clFFT is an open source OpenCL library implementation of FFT
+ The FFT is an implementation of the Discrete Fourier Transform (DFT) that
+ makes use of symmetries in the FFT definition to reduce the mathematical
+ intensity required from O(N2) to O(N log2( N )) when the sequence length
+ N is the product of small prime factors. Currently, there is no standard
+ API for FFT routines. Hardware vendors usually provide a set of
+ high-performance FFTs optimized for their systems: no two vendors employ
+ the same interfaces for their FFT routines. clFFT provides a set of FFT
+ routines that are optimized for AMD graphics processors, but also are
+ functional across CPU and other compute devices.
