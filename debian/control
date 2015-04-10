@@ -12,7 +12,7 @@ Architecture: any
 Multi-Arch: same
 Depends: libclfft2 (= ${binary:Version}), ocl-icd-dev
 Pre-Depends: ${misc:Pre-Depends}
-Description: clFFT is an open source OpenCL library implementation of FFT
+Description: clFFT is an OpenCL library for of FFT - development files
  The FFT is an implementation of the Discrete Fourier Transform (DFT) that
  makes use of symmetries in the FFT definition to reduce the mathematical
  intensity required from O(N2) to O(N log2( N )) when the sequence length
@@ -29,7 +29,7 @@ Multi-Arch: same
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, opencl-icd
 Pre-Depends: ${misc:Pre-Depends}
-Description: clFFT is an open source OpenCL library implementation of FFT
+Description: clFFT is an OpenCL library for of FFT - actual library
  The FFT is an implementation of the Discrete Fourier Transform (DFT) that
  makes use of symmetries in the FFT definition to reduce the mathematical
  intensity required from O(N2) to O(N log2( N )) when the sequence length
@@ -46,7 +46,7 @@ Multi-Arch: same
 Architecture: any
 Depends: libclfft2 (= ${binary:Version})
 Pre-Depends: ${misc:Pre-Depends}
-Description: clFFT is an open source OpenCL library implementation of FFT
+Description: clFFT is an OpenCL library for of FFT - test and benchmarks 
  The FFT is an implementation of the Discrete Fourier Transform (DFT) that
  makes use of symmetries in the FFT definition to reduce the mathematical
  intensity required from O(N2) to O(N log2( N )) when the sequence length
@@ -61,9 +61,9 @@ Package: libclfft2-dbg
 Section: libs
 Multi-Arch: same
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, opencl-icd
+Depends: libclfft2 (= ${binary:Version})
 Pre-Depends: ${misc:Pre-Depends}
-Description: clFFT is an open source OpenCL library implementation of FFT
+Description: clFFT is an OpenCL library for of FFT - debug symbols
  The FFT is an implementation of the Discrete Fourier Transform (DFT) that
  makes use of symmetries in the FFT definition to reduce the mathematical
  intensity required from O(N2) to O(N log2( N )) when the sequence length
