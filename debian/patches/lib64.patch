@@ -1,14 +1,5 @@
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -48,7 +48,7 @@
- endif( )
- 
- set( CLFFT_VERSION "${CLFFT_VERSION_MAJOR}.${CLFFT_VERSION_MINOR}.${CLFFT_VERSION_PATCH}")
--	
-+
- # This is incremented when the ABI to the library changes
- set( CLFFT_SOVERSION 2 )
- 
 @@ -115,8 +115,6 @@
  if( BUILD64 )
  	set_property( GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS TRUE )
@@ -18,12 +9,4 @@
  else( )
  	set_property( GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS FALSE )
  	message( STATUS "32bit build - FIND_LIBRARY_USE_LIB64_PATHS FALSE" )
-@@ -205,7 +203,7 @@
- 		# we only want c++0x if we're using gcc 4.5.2
- 		set( CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}" )
- 	endif()
--	
-+
- 	set( CMAKE_CXX_FLAGS "-pthread ${CMAKE_CXX_FLAGS}" )
- 	set( CMAKE_C_FLAGS "-pthread ${CMAKE_C_FLAGS}" )
- 
+

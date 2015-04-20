@@ -15,6 +15,7 @@ DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 %:
 	dh $@ --buildsystem cmake --parallel --sourcedirectory=src --dbg-package=libclfft2-dbg
 
-override_dh_auto_build-indep:
-	doxygen doc/clFFT.doxy
+#override_dh_installdocs:
+#	doxygen doc/clFFT.doxy
+#	dh_installdocs
 
