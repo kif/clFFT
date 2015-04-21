@@ -2788,7 +2788,7 @@
 +  SET( doxyfile             ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile        )
 +  SET( doxy_html_index_file ${CMAKE_CURRENT_BINARY_DIR}/doc/html/index.html )
 +  SET( doxy_output_root     ${CMAKE_CURRENT_BINARY_DIR}/doc/html        ) 
-+  SET( doxy_input           ${PROJECT_SOURCE_DIR}/src                   ) 
++  file(GLOB doxy_images     ${PROJECT_SOURCE_DIR}/../doc/*.jpg          ) 
 +  CONFIGURE_FILE( ${doxyfile_in} ${doxyfile} @ONLY )
 + 
 +  ADD_CUSTOM_COMMAND( OUTPUT ${doxy_html_index_file}
@@ -2803,6 +2803,6 @@
 + 
 +  ADD_CUSTOM_TARGET( doc ALL DEPENDS ${doxy_html_index_file} )
 + 
-+  INSTALL( DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc DESTINATION share/doc )
-+  INSTALL( DIRECTORY ${PROJECT_SOURCE_DIR}/../doc DESTINATION share/doc/html )
++  INSTALL( DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc DESTINATION share )
++  INSTALL( FILES ${doxy_images} DESTINATION share/doc/html )
 +ENDIF()
