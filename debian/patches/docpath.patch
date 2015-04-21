@@ -2759,7 +2759,7 @@
  	set( CMAKE_CXX_FLAGS "-pthread ${CMAKE_CXX_FLAGS}" )
  	set( CMAKE_C_FLAGS "-pthread ${CMAKE_C_FLAGS}" )
  
-@@ -309,3 +309,48 @@
+@@ -309,3 +309,49 @@
  
  # Define all variables that influence CPack before including CPack, such as install targets
  include( CPack )
@@ -2787,9 +2787,9 @@
 +  SET( doxyfile_in          ${PROJECT_SOURCE_DIR}/../doc/clFFT.doxy     )
 +  SET( doxyfile             ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile        )
 +  SET( doxy_html_index_file ${CMAKE_CURRENT_BINARY_DIR}/doc/html/index.html )
-+  SET( doxy_output_root     ${CMAKE_CURRENT_BINARY_DIR}/doc             ) # Pasted into Doxyfile.in
-+  SET( doxy_input           ${PROJECT_SOURCE_DIR}/src                   ) # Pasted into Doxyfile.in
-+  SET( doxy_extra_files     ${PROJECT_SOURCE_DIR}/../doc/*.jpg          ) # Pasted into Doxyfile.in
++  SET( doxy_output_root     ${CMAKE_CURRENT_BINARY_DIR}/doc/html        ) 
++  SET( doxy_input           ${PROJECT_SOURCE_DIR}/src                   ) 
++  file(GLOB  doxy_extra_files     ${PROJECT_SOURCE_DIR}/../doc/*.jpg    ) 
 + 
 +  CONFIGURE_FILE( ${doxyfile_in} ${doxyfile} @ONLY )
 + 
@@ -2801,7 +2801,8 @@
 +                      # custom_command for ${doxyfile} generation
 +                      # but I still have to figure out how...
 +                      MAIN_DEPENDENCY ${doxyfile} ${doxyfile_in}
-+                      #DEPENDS project_targets ${doxy_extra_files}
++		      file(COPY ${doxy_extra_files} 
++		      	   DESTINATION ${doxy_output_root})
 +                      COMMENT "Generating HTML documentation")
 + 
 +  ADD_CUSTOM_TARGET( doc ALL DEPENDS ${doxy_html_index_file} )
