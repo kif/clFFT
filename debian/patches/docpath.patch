@@ -2750,7 +2750,7 @@
  # This is incremented when the ABI to the library changes
  set( CLFFT_SOVERSION 2 )
  
-@@ -205,7 +205,7 @@
+@@ -205,7 +203,7 @@
  		# we only want c++0x if we're using gcc 4.5.2
  		set( CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}" )
  	endif()
@@ -2759,7 +2759,7 @@
  	set( CMAKE_CXX_FLAGS "-pthread ${CMAKE_CXX_FLAGS}" )
  	set( CMAKE_C_FLAGS "-pthread ${CMAKE_C_FLAGS}" )
  
-@@ -309,3 +309,48 @@
+@@ -309,3 +307,46 @@
  
  # Define all variables that influence CPack before including CPack, such as install targets
  include( CPack )
@@ -2789,8 +2789,6 @@
 +  SET( doxy_html_index_file ${CMAKE_CURRENT_BINARY_DIR}/doc/html/index.html )
 +  SET( doxy_output_root     ${CMAKE_CURRENT_BINARY_DIR}/doc/html        ) 
 +  SET( doxy_input           ${PROJECT_SOURCE_DIR}/src                   ) 
-+  file(GLOB  doxy_extra_files     ${PROJECT_SOURCE_DIR}/../doc/*.jpg    ) 
-+ 
 +  CONFIGURE_FILE( ${doxyfile_in} ${doxyfile} @ONLY )
 + 
 +  ADD_CUSTOM_COMMAND( OUTPUT ${doxy_html_index_file}
@@ -2801,10 +2799,10 @@
 +                      # custom_command for ${doxyfile} generation
 +                      # but I still have to figure out how...
 +                      MAIN_DEPENDENCY ${doxyfile} ${doxyfile_in}
-+		      file(COPY ${PROJECT_SOURCE_DIR}/../doc/*.jpg  DESTINATION ${doxy_output_root})
 +                      COMMENT "Generating HTML documentation")
 + 
 +  ADD_CUSTOM_TARGET( doc ALL DEPENDS ${doxy_html_index_file} )
 + 
 +  INSTALL( DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc DESTINATION share/doc )
++  INSTALL( DIRECTORY ${PROJECT_SOURCE_DIR}/../doc DESTINATION share/doc )
 +ENDIF()
