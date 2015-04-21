@@ -2759,7 +2759,7 @@
  	set( CMAKE_CXX_FLAGS "-pthread ${CMAKE_CXX_FLAGS}" )
  	set( CMAKE_C_FLAGS "-pthread ${CMAKE_C_FLAGS}" )
  
-@@ -309,3 +309,49 @@
+@@ -309,3 +309,48 @@
  
  # Define all variables that influence CPack before including CPack, such as install targets
  include( CPack )
@@ -2801,8 +2801,7 @@
 +                      # custom_command for ${doxyfile} generation
 +                      # but I still have to figure out how...
 +                      MAIN_DEPENDENCY ${doxyfile} ${doxyfile_in}
-+		      file(COPY ${doxy_extra_files} 
-+		      	   DESTINATION ${doxy_output_root})
++		      file(COPY ${PROJECT_SOURCE_DIR}/../doc/*.jpg  DESTINATION ${doxy_output_root})
 +                      COMMENT "Generating HTML documentation")
 + 
 +  ADD_CUSTOM_TARGET( doc ALL DEPENDS ${doxy_html_index_file} )
