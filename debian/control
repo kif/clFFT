@@ -10,7 +10,7 @@ Package: libclfft-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
-Depends: libclfft2 (= ${binary:Version}), ocl-icd-dev
+Depends: libclfft2 (= ${binary:Version}), ocl-icd-dev, ${misc:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Description: clFFT is an OpenCL FFT library - header
  The FFT is an implementation of the Discrete Fourier Transform (DFT) that
@@ -44,7 +44,7 @@ Package: libclfft2-bin
 Section: libs
 Multi-Arch: same
 Architecture: any
-Depends: libclfft2 (= ${binary:Version}), python
+Depends: libclfft2 (= ${binary:Version}), python, ${misc:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Description: clFFT is an OpenCL FFT library - benchmark binaries
  The FFT is an implementation of the Discrete Fourier Transform (DFT) that
@@ -58,10 +58,10 @@ Description: clFFT is an OpenCL FFT library - benchmark binaries
  functional across CPU and other compute devices.
 
 Package: libclfft2-dbg
-Section: libs
+Section: debug
 Multi-Arch: same
 Architecture: any
-Depends: libclfft2 (= ${binary:Version})
+Depends: libclfft2 (= ${binary:Version}), ${misc:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Description: clFFT is an OpenCL FFT library - debug symbols
  The FFT is an implementation of the Discrete Fourier Transform (DFT) that
@@ -75,10 +75,10 @@ Description: clFFT is an OpenCL FFT library - debug symbols
  functional across CPU and other compute devices.
 
 Package: libclfft2-doc
-Section: libs
+Section: doc
 Multi-Arch: same
-Architecture: any
-Depends: libclfft2 (= ${binary:Version})
+Architecture: all
+Depends: libclfft2 (= ${binary:Version}), ${misc:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Description: clFFT is an OpenCL FFT library - debug symbols
  The FFT is an implementation of the Discrete Fourier Transform (DFT) that
