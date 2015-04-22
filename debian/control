@@ -6,7 +6,7 @@ Standards-Version: 3.9.4
 Section: libs
 Homepage: https://github.com/clMathLibraries/clFFT
 
-Package: libclfft-dev
+Package: libclfft2-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
@@ -42,7 +42,7 @@ Description: clFFT is an OpenCL FFT library
 
 Package: libclfft2-bin
 Section: libs
-Multi-Arch: same
+Multi-Arch: foreign
 Architecture: any
 Depends: libclfft2 (= ${binary:Version}), ${misc:Depends}, ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends}
