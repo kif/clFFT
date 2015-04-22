@@ -44,7 +44,7 @@ Package: libclfft2-bin
 Section: libs
 Multi-Arch: same
 Architecture: any
-Depends: libclfft2 (= ${binary:Version}), python, ${misc:Depends}
+Depends: libclfft2 (= ${binary:Version}), ${misc:Depends}, ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Description: clFFT is an OpenCL FFT library - benchmark binaries
  The FFT is an implementation of the Discrete Fourier Transform (DFT) that
