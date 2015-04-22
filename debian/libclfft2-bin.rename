@@ -1,0 +1,10 @@
+#!/bin/sh
+for i in debian/tmp/usr/bin/Client*;
+do 
+	if [-f ${i}]
+	then
+		mv ${i} debian/tmp/usr/bin/clFFT-$(basename ${i})
+		ln -s debian/tmp/usr/bin/clFFT-$(basename ${i}) debian/tmp/usr/bin/clFFT-Client
+	fi
+done
+

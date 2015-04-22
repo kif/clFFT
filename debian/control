@@ -1,7 +1,7 @@
 Source: clfft
 Priority: extra
 Maintainer: Jerome Kieffer <jerome.kieffer@esrf.fr>
-Build-Depends: debhelper (>= 9), cmake, opencl-icd, ocl-icd-dev, dh-exec
+Build-Depends: debhelper (>= 9), cmake, opencl-icd, ocl-icd-dev, dh-exec, libboost-all-dev
 Standards-Version: 3.9.4
 Section: libs
 Homepage: https://github.com/clMathLibraries/clFFT
