@@ -1,7 +1,7 @@
 Source: clfft
 Priority: extra
 Maintainer: Jerome Kieffer <jerome.kieffer@esrf.fr>
-Build-Depends: debhelper (>= 9), cmake, opencl-icd, ocl-icd-dev, dh-exec, libboost-all-dev
+Build-Depends: debhelper (>= 9), cmake, ocl-icd-dev, dh-exec, libboost-all-dev
 Standards-Version: 3.9.4
 Section: libs
 Homepage: https://github.com/clMathLibraries/clFFT
@@ -79,7 +79,7 @@ Section: doc
 Architecture: all
 Depends: ${misc:Depends}
 Pre-Depends: ${misc:Pre-Depends}
-Description: clFFT is an OpenCL FFT library - debug symbols
+Description: clFFT is an OpenCL FFT library - documentation
  The FFT is an implementation of the Discrete Fourier Transform (DFT) that
  makes use of symmetries in the FFT definition to reduce the mathematical
  intensity required from O(N2) to O(N log2( N )) when the sequence length
