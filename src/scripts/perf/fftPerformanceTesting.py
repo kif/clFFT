@@ -1,12 +1,13 @@
+#!/usr/bin/env python2
 # ########################################################################
 # Copyright 2013 Advanced Micro Devices, Inc.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 # http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,7 +16,7 @@
 # ########################################################################
 
 import itertools
-import re#gex
+import re  # gex
 import subprocess
 import os
 import sys
@@ -25,10 +26,11 @@ from datetime import datetime
 
 tableHeader = 'lengthx,lengthy,lengthz,batch,device,inlay,outlay,place,precision,label,GFLOPS'
 
+
 class TestCombination:
     def __init__(self,
                  lengthx, lengthy, lengthz, batchsize,
-                 device, inlayout, outlayout, placeness, precision,                 
+                 device, inlayout, outlayout, placeness, precision,
                  label):
         self.x = lengthx
         self.y = lengthy
@@ -43,6 +45,7 @@ class TestCombination:
 
     def __str__(self):
         return self.x + 'x' + self.y + 'x' + self.z + ':' + self.batchsize + ', ' + self.device + ', ' + self.inlayout + '/' + self.outlayout + ', ' + self.placeness + ', ' + self.precision + ' -- ' + self.label
+
 
 class GraphPoint:
     def __init__(self,
@@ -63,6 +66,7 @@ class GraphPoint:
         # ALL members must be represented here (x, y, z, batch, device, label, etc)
         return self.x + 'x' + self.y + 'x' + self.z + ':' + self.batchsize + ', ' + self.precision + ' precision, ' + self.device + ', -- ' + self.label + '; ' + self.gflops
 
+
 class TableRow:
     # parameters = class TestCombination instantiation
     def __init__(self, parameters, gflops):
@@ -72,13 +76,15 @@ class TableRow:
     def __str__(self):
         return self.parameters.__str__() + '; ' + self.gflops
 
-def transformDimension(x,y,z):
+
+def transformDimension(x, y, z):
     if int(z) != 1:
         return 3
     elif int(y) != 1:
         return 2
     elif int(x) != 1:
         return 1
+
 
 def executable(library):
     if type(library) != str:
@@ -93,7 +99,8 @@ def executable(library):
         if sys.platform == 'win32':
             exe = 'Client.exe'
         elif sys.platform == 'linux2':
-            exe = 'Client'
+            exe = "/usr/bin/clFFT-client"
+            # 'Client'
     else:
         print 'ERROR: unknown library -- cannot determine executable name'
         quit()
@@ -105,14 +112,16 @@ def executable(library):
 
     return exe
 
+
 def max_mem_available_in_bytes(exe, device):
     arguments = [exe, '-i', device]
-    
+
     deviceInfo = subprocess.check_output(arguments, stderr=subprocess.STDOUT).split(os.linesep)
-    deviceInfo = itertools.ifilter( lambda x: x.count('MAX_MEM_ALLOC_SIZE'), deviceInfo)
+    deviceInfo = itertools.ifilter(lambda x: x.count('MAX_MEM_ALLOC_SIZE'), deviceInfo)
     deviceInfo = list(itertools.islice(deviceInfo, None))
     maxMemoryAvailable = re.search('\d+', deviceInfo[0])
     return int(maxMemoryAvailable.group(0))
+
 
 def max_problem_size(exe, layout, precision, device):
     if layout == 'ci' or layout == 'cp':
@@ -133,23 +142,26 @@ def max_problem_size(exe, layout, precision, device):
     max_problem_size = max_problem_size / 16
     return max_problem_size
 
+
 def maxBatchSize(lengthx, lengthy, lengthz, layout, precision, exe, device):
     problemSize = int(lengthx) * int(lengthy) * int(lengthz)
     maxBatchSize = max_problem_size(exe, layout, precision, device) / problemSize
-    if int(lengthx) == pow(2,16) or int(lengthx) == pow(2,17):
+    if int(lengthx) == pow(2, 16) or int(lengthx) == pow(2, 17):
         # special cases in the kernel. extra padding is added in, so we need to shrink the batch size to accommodate
-        return str(maxBatchSize/2)
+        return str(maxBatchSize / 2)
     else:
         return str(maxBatchSize)
+
 
 def create_ini_file_if_requested(args):
     if args.createIniFilename:
         for x in vars(args):
-            if (type(getattr(args,x)) != file) and x.count('File') == 0:
+            if (type(getattr(args, x)) != file) and x.count('File') == 0:
                 args.createIniFilename.write('--' + x + os.linesep)
-                args.createIniFilename.write(str(getattr(args,x)) + os.linesep)
+                args.createIniFilename.write(str(getattr(args, x)) + os.linesep)
         quit()
-    
+
+
 def load_ini_file_if_requested(args, parser):
     if args.useIniFilename:
         argument_list = args.useIniFilename.readlines()
@@ -157,8 +169,10 @@ def load_ini_file_if_requested(args, parser):
         args = parser.parse_args(argument_list)
     return args
 
+
 def is_numeric_type(x):
     return type(x) == int or type(x) == long or type(x) == float
+
 
 def split_up_comma_delimited_lists(args):
     for x in vars(args):
@@ -170,6 +184,7 @@ def split_up_comma_delimited_lists(args):
         elif type(attr) == str:
             setattr(args, x, attr.split(','))
     return args
+
 
 class Range:
     def __init__(self, ranges, defaultStep='+1'):
@@ -188,7 +203,7 @@ class Range:
                 elif thisRange == 'max':
                     self.expanded = self.expanded + ['max']
                 else:
-                #elif thisRange != 'max':
+                # elif thisRange != 'max':
                     if thisRange.count(':'):
                         self._stepAmount = thisRange.split(':')[1]
                     else:
@@ -231,8 +246,10 @@ class Range:
     def _add(self):
         self.current = self.current + self._stepAmount
 
+
 def expand_range(a_range):
     return Range(a_range).expanded
+
 
 def decode_parameter_problemsize(problemsize):
     if not problemsize.count(None):
@@ -242,13 +259,15 @@ def decode_parameter_problemsize(problemsize):
             j = 0
             while j < len(problemsize[i]):
                 problemsize[i][j] = problemsize[i][j].split('x')
-                j = j+1
-            i = i+1
+                j = j + 1
+            i = i + 1
 
     return problemsize
 
+
 def gemm_table_header():
     return 'm,n,k,lda,ldb,ldc,alpha,beta,order,transa,transb,function,device,library,label,GFLOPS'
+
 
 class GemmTestCombination:
     def __init__(self,
@@ -273,6 +292,7 @@ class GemmTestCombination:
 
     def __str__(self):
         return self.sizem + 'x' + self.sizen + 'x' + self.sizek + ':' + self.lda + 'x' + self.ldb + 'x' + self.ldc + ', ' + self.device + ', ' + self.function + ', ' + self.library + ', alpha(' + self.alpha + '), beta(' + self.beta + '), order(' + self.order + '), transa(' + self.transa + '), transb(' + self.transb + ') -- ' + self.label
+
 
 class GemmGraphPoint:
     def __init__(self,
@@ -300,16 +320,17 @@ class GemmGraphPoint:
         # ALL members must be represented here (x, y, z, batch, device, label, etc)
         return self.sizem + 'x' + self.sizen + 'x' + self.sizek + ':' + self.device + ', ' + self.function + ', ' + self.library + ', order(' + self.order + '), transa(' + self.transa + '), transb(' + self.transb + ') -- ' + self.label + '; ' + self.gflops + ' gflops'
 
-def open_file( filename ):
+
+def open_file(filename):
     if type(filename) == list:
         filename = filename[0]
     if filename == None:
-        filename = 'results' + datetime.now().isoformat().replace(':','.') + '.txt'
+        filename = 'results' + datetime.now().isoformat().replace(':', '.') + '.txt'
     else:
         if os.path.isfile(filename):
             oldname = filename
-            filename = filename + datetime.now().isoformat().replace(':','.')
+            filename = filename + datetime.now().isoformat().replace(':', '.')
             message = 'A file with the name ' + oldname + ' already exists. Changing filename to ' + filename
             print message
-    
+
     return open(filename, 'w')
