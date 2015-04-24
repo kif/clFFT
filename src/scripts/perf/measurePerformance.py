@@ -1,13 +1,12 @@
-#!/usr/bin/env python2
 # ########################################################################
 # Copyright 2013 Advanced Micro Devices, Inc.
-#
+# 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-#
+# 
 # http://www.apache.org/licenses/LICENSE-2.0
-#
+# 
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,7 +18,7 @@ import sys
 import argparse
 import subprocess
 import itertools
-import re  # gex
+import re#gex
 import os
 from threading import Timer, Thread
 import thread, time
@@ -32,8 +31,8 @@ from fftPerformanceTesting import *
 from performanceUtility import timeout, log, generate235Radices
 
 IAM = 'FFT'
-TIMOUT_VAL = 900  # In seconds
-
+TIMOUT_VAL = 900  #In seconds
+   
 devicevalues = ['gpu', 'cpu']
 layoutvalues = ['cp', 'ci']
 placevalues = ['in', 'out']
@@ -95,39 +94,39 @@ args = parser.parse_args()
 
 label = str(args.label)
 
-subprocess.call('mkdir perfLog', shell=True)
-logfile = os.path.join('perfLog', (label + '-' + 'fftMeasurePerfLog.txt'))
+subprocess.call('mkdir perfLog', shell = True)
+logfile = os.path.join('perfLog', (label+'-'+'fftMeasurePerfLog.txt'))
 
 def printLog(txt):
     print txt
     log(logfile, txt)
 
 printLog("=========================MEASURE PERFORMANCE START===========================")
-printLog("Process id of Measure Performance:" + str(os.getpid()))
+printLog("Process id of Measure Performance:"+str(os.getpid()))
 
 currCommandProcess = None
 
 
-printLog('Executing measure performance for label: ' + str(label))
+printLog('Executing measure performance for label: '+str(label))
 
 
-# This function is defunct now
-@timeout(1, "fileName")  # timeout is 5 minutes, 5*60 = 300 secs
+#This function is defunct now
+@timeout(1, "fileName") # timeout is 5 minutes, 5*60 = 300 secs
 def checkTimeOutPut2(args):
     global currCommandProcess
-    # ret = subprocess.check_output(args, stderr=subprocess.STDOUT)
-    # return ret
+    #ret = subprocess.check_output(args, stderr=subprocess.STDOUT)
+    #return ret
     currCommandProcess = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    printLog("Curr Command Process id = " + str(currCommandProcess.pid))
-    ret = currCommandProcess.communicate()
+    printLog("Curr Command Process id = "+str(currCommandProcess.pid))
+    ret = currCommandProcess.communicate()    
     if(ret[0] == None or ret[0] == ''):
         errCode = currCommandProcess.poll()
         raise subprocess.CalledProcessError(errCode, args, output=ret[1])
     return ret[0]
 
 
-# Spawns a separate thread to execute the library command and wait for that thread to complete
-# This wait is of 900 seconds (15 minutes). If still the thread is alive then we kill the thread
+#Spawns a separate thread to execute the library command and wait for that thread to complete
+#This wait is of 900 seconds (15 minutes). If still the thread is alive then we kill the thread
 def checkTimeOutPut(args):
     t = None
     global currCommandProcess
@@ -141,25 +140,28 @@ def checkTimeOutPut(args):
         global stde
         try:
             stdo, stde = currCommandProcess.communicate()
-            printLog('stdout:\n' + str(stdo))
-            printLog('stderr:\n' + str(stde))
+            printLog('stdout:\n'+str(stdo))
+            printLog('stderr:\n'+str(stde))
         except:
             printLog("ERROR: UNKNOWN Exception - +checkWinTimeOutPut()::executeCommand()")
 
     currCommandProcess = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     thread = Thread(target=executeCommand)
     thread.start()
-    thread.join(TIMOUT_VAL)  # wait for the thread to complete
+    thread.join(TIMOUT_VAL) #wait for the thread to complete 
     if thread.is_alive():
         printLog('ERROR: Killing the process - terminating thread because it is taking too much of time to execute')
         currCommandProcess.kill()
         printLog('ERROR: Timed out exception')
         raise errorHandler.ApplicationException(__file__, errorHandler.TIME_OUT)
-    if stdo == "" or stdo == None:
+    if stdo == "" or stdo==None:
         errCode = currCommandProcess.poll()
         printLog('ERROR: @@@@@Raising Called processor exception')
         raise subprocess.CalledProcessError(errCode, args, output=stde)
     return stdo
+
+
+
 
 
 # don't try to create and use an .ini file at the same time (it will open a portal through which demons will emerge)
@@ -167,22 +169,22 @@ if args.iniFilename and args.createIniFilename:
     printLog('ERROR: --ini and --createini are mutually exclusive. Please choose only one.')
     quit()
 
-# read in .ini parameters if --ini is used
+#read in .ini parameters if --ini is used
 if args.iniFilename != None:
     if not os.path.isfile(args.iniFilename):
         printLog("No file with the name \'{}\' exists. Please indicate another filename.".format(args.iniFilename))
         quit()
-
+    
     ini = open(args.iniFilename, 'r')
     iniContents = ini.read()
     iniContents = iniContents.split(';')
-    for i in range(0, len(iniContents)):
+    for i in range(0,len(iniContents)):
         line = iniContents.pop()
         line = line.partition(' ')
         parameter = line[0]
         value = line[2]
-        value = value.replace('\'', '').replace('[', '').replace(']', '').replace(' ', '')
-
+        value = value.replace('\'','').replace('[','').replace(']','').replace(' ','')
+        
         if parameter == 'batchSize':
             args.batchSize = value
         elif parameter == 'constProbSize':
@@ -209,13 +211,13 @@ if args.iniFilename != None:
             printLog('{} corrupted. Please re-create a .ini file with the --createini flag.'.format(args.iniFilename))
             quit()
 
-# create ini file if requested
+#create ini file if requested
 if args.createIniFilename != None:
     printLog('Creating Ini files')
     if os.path.isfile(args.createIniFilename):
         printLog('A file with the name \'{}\' already exists. Please delete the file or choose another name.'.format(args.createIniFilename))
         quit()
-    printLog('Creating Ini file:' + args.createIniFilename + '\n')
+    printLog('Creating Ini file:'+args.createIniFilename+'\n')
     ini = open(args.createIniFilename, 'w')
     ini.write('batchSize {} ;'.format(args.batchSize))
     ini.write('constProbSize {} ;'.format(args.constProbSize))
@@ -228,16 +230,16 @@ if args.createIniFilename != None:
     ini.write('outputlayout {} ;'.format(args.outputlayout))
     ini.write('placeness {} ;'.format(args.placeness))
     ini.write('precision {} ;'.format(args.precision))
-    printLog('Created Ini file:' + args.createIniFilename + '\n')
+    printLog('Created Ini file:'+args.createIniFilename+'\n')
     printLog("=========================MEASURE PERFORMANCE START===========================\n")
     quit()
 
 
-# turn pow10 into its range list
+#turn pow10 into its range list
 if args.batchSize.count('pow10'):
     args.batchSize = pow10
 
-# split up comma-delimited lists
+#split up comma-delimited lists
 args.batchSize = args.batchSize.split(',')
 args.constProbSize = int(args.constProbSize.split(',')[0])
 args.device = args.device.split(',')
@@ -252,12 +254,13 @@ args.placeness = args.placeness.split(',')
 args.precision = args.precision.split(',')
 
 
-printLog('Executing for label: ' + str(args.label))
-# check parameters for sanity
+
+printLog('Executing for label: '+str(args.label))
+#check parameters for sanity
 
 # batchSize of 'max' must not be in a list (does not get on well with others)
-# if args.batchSize.count('max') and len(args.batchSize) > 1:
-if (args.batchSize.count('max') or args.batchSize.count('adapt'))and len(args.batchSize) > 1:
+#if args.batchSize.count('max') and len(args.batchSize) > 1:
+if ( args.batchSize.count('max') or args.batchSize.count('adapt') )and len(args.batchSize) > 1:
     printLog('ERROR: --batchsize max must not be in a comma delimited list')
     quit()
 
@@ -280,48 +283,44 @@ def isPrime(n):
     n = abs(n)
     i = 2
     while i <= math.sqrt(n):
-        if n % i == 0:
+        if n%i == 0:
             return False
         i += 1
     return True
 
-
 def findFactors(number):
-    iter_space = range(1, number + 1)
+    iter_space = range(1, number+1)
     prime_factor_list = []
     for curr_iter in iter_space:
         if isPrime(curr_iter) == True:
-            # print 'curr_iter_prime: ', curr_iter
-            if number % curr_iter == 0:
+            #print 'curr_iter_prime: ', curr_iter
+            if number%curr_iter == 0:
                 prime_factor_list.append(curr_iter)
     return prime_factor_list
 
 
+#Type : Function
+#Input: num, a number which we need to factorize
+#Return Type: list
+#Details: This function returns only the prime factors on an input number
+#         e.g: input: 20, returns: [2,2,5]
+#              input: 32, returns: [2,2,2,2,2]
 def factor(num):
-    """
-    This function returns only the prime factors on an input number
-        e.g: input: 20, returns: [2,2,5]
-            input: 32, returns: [2,2,2,2,2]
-
-    Type : Function
-    Input: num, a number which we need to factorize
-    Return Type: list
-    """
     if num == 1:
         return [1]
     i = 2
-    limit = num ** 0.5
+    limit = num**0.5
     while i <= limit:
         if num % i == 0:
-            ret = factor(num / i)
+            ret = factor(num/i)
             ret.append(i)
             return ret
         i += 1
     return [num]
 
 def validateFactors(flist):
-    ref_list = [1, 2, 3, 5]
-    if flist == ref_list:
+    ref_list = [1,2,3,5]
+    if flist==ref_list:
         return True
     if len(flist) > len(ref_list):
         return False
@@ -330,24 +329,23 @@ def validateFactors(flist):
             return False
     return True
 
+#Type : Function
+#Input: num, a number which we need to validate for 1,2,3 or 5 factors
+#Return Type: boolean
+#Details: This function validates an input number for its prime factors
+#         If factors has number other than 1,2,3 or 5 then return false else return true
+#         e.g: input: 20, returns: True
+#              input: 28, returns: False
 def validate_number_for_1235(num):
-    """This function validates an input number for its prime factors
-    If factors has number other than 1,2,3 or 5 then return false else return true
-    e.g: input: 20, returns: True
-         input: 28, returns: False
-
-    Input: num, a number which we need to validate for 1,2,3 or 5 factors
-    Return Type: boolean
-    """
     if num == 0:
         return True
-    set1235 = set([1, 2, 3, 5])
+    set1235 = set([1,2,3,5])
     setPrimeFactors = set(factor(num))
-    setPrimeFactors = setPrimeFactors | set1235  # performed union of two sets
+    setPrimeFactors = setPrimeFactors | set1235 #performed union of two sets
     #if still the sets are same then we are done!!!
-    # else we got few factors other than 1,2,3 or 5 and we should invalidate
-    # the input number
-    if setPrimeFactors == set1235:
+    #else we got few factors other than 1,2,3 or 5 and we should invalidate
+    #the input number
+    if setPrimeFactors ==  set1235:
         return True
     return False
 
@@ -360,38 +358,39 @@ def getValidNumbersInRange(rlist):
             valid_number_list.append(relement)
     return valid_number_list
 
-
 def get_next_num_with_1235_factors(start):
-    start += 1
+    start+=1
     while not validateFactors(findFactors(start)):
-        start += 1
+        start+=1
     return start
 
 
 def check_number_for_1235_factors(number):
-    # printLog('number:'+ number)
+    #printLog('number:'+ number)
     factors = findFactors(number)
-    # printLog('factors:'+ factors)
+    #printLog('factors:'+ factors)
     if not validateFactors(factors):
         printLog("ERROR: --{0} must have only 1,2,3,5 as factors")
         return False
     return True
 
 
+
 def check_for_1235_factors(values, option):
-    # print 'values: ', values
+    #print 'values: ', values
     for n in values:
-        for m in n.replace('-', ',').split(','):
+        for m in n.replace('-',',').split(','):
             if not validate_number_for_1235(int(m)):
                 print 'ERROR: --{0} must specify number with only 1,2,3,5 as factors'.format(option)
                 quit()
-            # print 'Valid number for :',option,':', m
-
+            #print 'Valid number for :',option,':', m
+       
 
 if args.library == 'clFFT':
     check_for_1235_factors(args.lengthx, 'lengthx')
     check_for_1235_factors(args.lengthy, 'lengthy')
     check_for_1235_factors(args.lengthz, 'lengthz')
+
 
 
 if not os.path.isfile(executable(args.library)):
@@ -405,10 +404,9 @@ def get235RadicesNumberInRange(minimum, maximum):
     numbers = generate235Radices(maximum)
     minIndex = numbers.index(minimum)
     maxIndex = numbers.index(maximum)
-    return numbers[minIndex:maxIndex + 1]
-
-
-# expand ranges
+    return numbers[minIndex:maxIndex+1]
+   
+#expand ranges
 class Range:
     def __init__(self, ranges, defaultStep='+1'):
         self.expanded = []
@@ -479,24 +477,25 @@ args.lengthy = Range(args.lengthy, 'l').expanded
 args.lengthz = Range(args.lengthz, 'l').expanded
 
 
-# expand problemsizes ('XxYxZ:batch')
-# print "args.problemsize--1-->", args.problemsize
+
+#expand problemsizes ('XxYxZ:batch')
+#print "args.problemsize--1-->", args.problemsize
 if args.problemsize and args.problemsize[0] != 'None':
     i = 0
     while i < len(args.problemsize):
         args.problemsize[i] = args.problemsize[i].split(':')
         args.problemsize[i][0] = args.problemsize[i][0].split('x')
-        i = i + 1
+        i = i+1
 
 
-# create the problem size combinations for each run of the client
+#create the problem size combinations for each run of the client
 problem_size_combinations = itertools.product(args.lengthx, args.lengthy, args.lengthz, args.batchSize)
 
 problem_size_combinations = list(itertools.islice(problem_size_combinations, None))
 
-# print "args.problemsize--2-->", args.problemsize
+#print "args.problemsize--2-->", args.problemsize
 
-# add manually entered problem sizes to the list of FFTs to crank out
+#add manually entered problem sizes to the list of FFTs to crank out
 manual_test_combinations = []
 
 if args.problemsize and args.problemsize[0] != 'None':
@@ -505,24 +504,24 @@ if args.problemsize and args.problemsize[0] != 'None':
         y = []
         z = []
         batch = []
-
+    
         x.append(int(n[0][0]))
-
+    
         if len(n[0]) >= 2:
             y.append(int(n[0][1]))
         else:
             y.append(1)
-
+    
         if len(n[0]) >= 3:
             z.append(int(n[0][2]))
         else:
             z.append(1)
-
+    
         if len(n) > 1:
             batch.append(int(n[1]))
         else:
             batch.append(1)
-
+    
         combos = itertools.product(x, y, z, batch)
         combos = list(itertools.islice(combos, None))
         for n in combos:
@@ -532,29 +531,29 @@ if args.problemsize and args.problemsize[0] != 'None':
 
 problem_size_combinations = problem_size_combinations + manual_test_combinations
 
-# create final list of all transformations (with problem sizes and transform properties)
+#create final list of all transformations (with problem sizes and transform properties)
 test_combinations = itertools.product(problem_size_combinations, args.device, args.inputlayout, args.outputlayout, args.placeness, args.precision)
 test_combinations = list(itertools.islice(test_combinations, None))
 test_combinations = [TestCombination(params[0][0], params[0][1], params[0][2], params[0][3], params[1], params[2], params[3], params[4], params[5], args.label) for params in test_combinations]
 
 
-# turn each test combination into a command, run the command, and then stash the gflops
-result = []  # this is where we'll store the results for the table
+#turn each test combination into a command, run the command, and then stash the gflops
+result = [] # this is where we'll store the results for the table
 
 
-# open output file and write the header
+#open output file and write the header
 
 if args.tableOutputFilename == None:
-   args.tableOutputFilename = 'results' + datetime.now().isoformat().replace(':', '.') + '.txt'
+   args.tableOutputFilename = 'results' + datetime.now().isoformat().replace(':','.') + '.txt'
 else:
    if os.path.isfile(args.tableOutputFilename):
        oldname = args.tableOutputFilename
-       args.tableOutputFilename = args.tableOutputFilename + datetime.now().isoformat().replace(':', '.')
+       args.tableOutputFilename = args.tableOutputFilename + datetime.now().isoformat().replace(':','.')
        message = 'A file with the name ' + oldname + ' already exists. Changing filename to ' + args.tableOutputFilename
        printLog(message)
 
 
-printLog('table header---->' + str(tableHeader))
+printLog('table header---->'+ str(tableHeader))
 
 table = open(args.tableOutputFilename, 'w')
 table.write(tableHeader + '\n')
@@ -565,23 +564,23 @@ if args.constProbSize == -1:
 args.constProbSize = int(args.constProbSize)
 
 
-printLog('Total combinations =  ' + str(len(test_combinations)))
+printLog('Total combinations =  '+str(len(test_combinations)))
 
 vi = 0
-# test_combinations = test_combinations[825:830]
+#test_combinations = test_combinations[825:830]
 for params in test_combinations:
-    vi = vi + 1
+    vi = vi+1
     printLog("")
-    printLog('preparing command: ' + str(vi))
+    printLog('preparing command: '+ str(vi))    
     device = params.device
     lengthx = str(params.x)
     lengthy = str(params.y)
     lengthz = str(params.z)
-
+    
     if params.batchsize == 'max':
         batchSize = maxBatchSize(lengthx, lengthy, lengthz, params.inlayout, params.precision, executable(args.library), '--' + device)
     elif params.batchsize == 'adapt':
-        batchSize = str(args.constProbSize / (int(lengthx) * int(lengthy) * int(lengthz)))
+        batchSize = str(args.constProbSize/(int(lengthx)*int(lengthy)*int(lengthz)))
     else:
         batchSize = str(params.batchsize)
 
@@ -614,7 +613,7 @@ for params in test_combinations:
         printLog('ERROR: invalid value for precision when assembling client command')
 
 
-    # set up arguments here
+    #set up arguments here
     if args.library == 'clFFT':
         arguments = [executable(args.library),
                      '--' + device,
@@ -627,17 +626,17 @@ for params in test_combinations:
                      placeness,
                      precision,
                      '-p', '10']
-
+   
     writeline = True
     try:
-        printLog('Executing Command: ' + str(arguments))
+        printLog('Executing Command: '+str(arguments))
         output = checkTimeOutPut(arguments)
         output = output.split(os.linesep);
         printLog('Execution Successfull---------------\n')
 
     except errorHandler.ApplicationException as ae:
         writeline = False
-        printLog('ERROR: Command is taking too much of time ' + ae.message + '\n' + 'Command: \n' + str(arguments))
+        printLog('ERROR: Command is taking too much of time '+ae.message+'\n'+'Command: \n'+str(arguments))
         continue
     except subprocess.CalledProcessError as clientCrash:
         print 'Command execution failure--->'
@@ -646,7 +645,7 @@ for params in test_combinations:
             printLog('Omitting line from table - problem is too large')
         else:
             writeline = False
-            printLog('ERROR: client crash. Please report the following error message (with \'CLFFT_*\' error code, if given, and the parameters used to invoke measurePerformance.py) \n' + clientCrash.output + '\n')
+            printLog('ERROR: client crash. Please report the following error message (with \'CLFFT_*\' error code, if given, and the parameters used to invoke measurePerformance.py) \n'+clientCrash.output+'\n')
             printLog('IN ORIGINAL WE CALL QUIT HERE - 1\n')
             continue
 
@@ -657,7 +656,7 @@ for params in test_combinations:
 
     if writeline:
         try:
-            output = itertools.ifilter(lambda x: x.count('Gflops'), output)
+            output = itertools.ifilter( lambda x: x.count('Gflops'), output)
             output = list(itertools.islice(output, None))
             thisResult = re.search('\d+\.*\d*e*-*\d*$', output[-1])
             thisResult = float(thisResult.group(0))
@@ -674,31 +673,31 @@ for params in test_combinations:
     else:
         if(len(output) > 0):
             if output[0].find('nan') or output[0].find('inf'):
-                printLog('WARNING: output from client was funky for this run. skipping table row')
+                printLog( 'WARNING: output from client was funky for this run. skipping table row')
             else:
                 prinLog('ERROR: output from client makes no sense')
                 printLog(str(output[0]))
                 printLog('IN ORIGINAL WE CALL QUIT HERE - 2\n')
         else:
             prinLog('ERROR: output from client makes no sense')
-            # quit()
+            #quit()
 printLog("=========================MEASURE PERFORMANCE ENDS===========================\n")
 #
-# """
-# print a pretty table
-# """
-# if args.tableOutputFilename == None:
+#"""
+#print a pretty table
+#"""
+#if args.tableOutputFilename == None:
 #   args.tableOutputFilename = 'results' + datetime.now().isoformat().replace(':','.') + '.txt'
-# else:
+#else:
 #   if os.path.isfile(args.tableOutputFilename):
 #       oldname = args.tableOutputFilename
 #       args.tableOutputFilename = args.tableOutputFilename + datetime.now().isoformat().replace(':','.')
 #       message = 'A file with the name ' + oldname + ' already exists. Changing filename to ' + args.tableOutputFilename
 #       print message
 #
-# table = open(args.tableOutputFilename, 'w')
-# table.write(tableHeader + '\n')
-# for x in result:
+#table = open(args.tableOutputFilename, 'w')
+#table.write(tableHeader + '\n')
+#for x in result:
 #   row = ''
 #   for y in x:
 #       row = row + str(y) + ','
