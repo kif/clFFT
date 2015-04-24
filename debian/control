@@ -1,7 +1,7 @@
 Source: clfft
 Priority: extra
 Maintainer: Jerome Kieffer <jerome.kieffer@esrf.fr>
-Build-Depends: debhelper (>= 9), cmake, ocl-icd-dev, dh-exec, libboost-all-dev
+Build-Depends: debhelper (>= 9), cmake, dh-exec, libboost-all-dev, doxygen
 Standards-Version: 3.9.4
 Section: libs
 Homepage: https://github.com/clMathLibraries/clFFT
@@ -27,7 +27,7 @@ Package: libclfft2
 Section: libs
 Multi-Arch: same
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, opencl-icd
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Description: clFFT is an OpenCL FFT library
  The FFT is an implementation of the Discrete Fourier Transform (DFT) that
