@@ -1780,7 +1780,8 @@
 +# installing MathJax.  However, it is strongly recommended to install a local
  # copy of MathJax from http://www.mathjax.org before deployment.
  
- MATHJAX_RELPATH        = http://www.mathjax.org/mathjax
+-MATHJAX_RELPATH        = http://www.mathjax.org/mathjax
++MATHJAX_RELPATH        = /usr/share/javascript/mathjax
  
 -# The MATHJAX_EXTENSIONS tag can be used to specify one or MathJax extension 
 +# The MATHJAX_EXTENSIONS tag can be used to specify one or MathJax extension
@@ -1810,7 +1811,8 @@
 +# typically be disabled. For large projects the javascript based search engine
  # can be slow, then enabling SERVER_BASED_SEARCH may provide a better solution.
  
- SEARCHENGINE           = YES
+-SEARCHENGINE           = YES
++SEARCHENGINE           = NO 
  
 -# When the SERVER_BASED_SEARCH tag is enabled the search engine will be 
 -# implemented using a web server instead of a web client using Javascript. 

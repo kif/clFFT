@@ -77,7 +77,7 @@ Description: clFFT is an OpenCL FFT library - debug symbols
 Package: libclfft2-doc
 Section: doc
 Architecture: all
-Depends: ${misc:Depends}
+Depends: ${misc:Depends}, libjs-mathjax
 Pre-Depends: ${misc:Pre-Depends}
 Description: clFFT is an OpenCL FFT library - documentation
  The FFT is an implementation of the Discrete Fourier Transform (DFT) that
