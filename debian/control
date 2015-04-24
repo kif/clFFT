@@ -10,7 +10,7 @@ Package: libclfft2-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
-Depends: libclfft2 (= ${binary:Version}), ocl-icd-dev, ${misc:Depends}
+Depends: libclfft2 (= ${binary:Version}), ${misc:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Description: clFFT is an OpenCL FFT library - header
  The FFT is an implementation of the Discrete Fourier Transform (DFT) that
