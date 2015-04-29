@@ -3,7 +3,7 @@ Priority: extra
 Maintainer: Jerome Kieffer <jerome.kieffer@esrf.fr>
 Build-Depends: debhelper (>= 9), cmake, dh-exec, libboost-all-dev, doxygen, 
                opencl-headers, libstdc++-4.9-dev|libstdc++-dev, libgtest-dev,
-               ocl-icd-libopencl1|amd-libopencl1|nvidia-libopencl1
+               ocl-icd-libopencl1|libopencl1, ocl-icd-opencl-dev|ocl-icd-dev
 Standards-Version: 3.9.4
 Section: libs
 Homepage: https://github.com/clMathLibraries/clFFT
