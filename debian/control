@@ -1,7 +1,7 @@
 Source: clfft
 Priority: extra
 Maintainer: Jerome Kieffer <jerome.kieffer@esrf.fr>
-Build-Depends: debhelper (>= 9), cmake, dh-exec, libboost-all-dev, doxygen, 
+Build-Depends: debhelper (>= 9), cmake, dh-exec, libboost-all-dev, doxygen,
                opencl-headers, libstdc++-4.9-dev|libstdc++-dev, libgtest-dev,
                ocl-icd-libopencl1|libopencl1, ocl-icd-opencl-dev|ocl-icd-dev,
                g++-multilib
@@ -64,7 +64,7 @@ Package: libclfft2-dbg
 Section: debug
 Multi-Arch: same
 Architecture: any
-Depends: libclfft2 (= ${binary:Version}), ${misc:Depends}
+Depends: libclfft2 (= ${binary:Version}), ${misc:Depends}, ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Description: clFFT is an OpenCL FFT library - debug symbols
  The FFT is an implementation of the Discrete Fourier Transform (DFT) that
